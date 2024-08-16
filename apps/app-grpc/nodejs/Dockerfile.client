@@ -1,0 +1,22 @@
+# Stage 1: Build
+FROM node:14-alpine AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+# Stage 2: Run
+FROM node:14-alpine
+
+WORKDIR /app
+
+COPY --from=build /app /app
+
+# Create a non-root user and use it
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+CMD ["node", "client.mjs"]

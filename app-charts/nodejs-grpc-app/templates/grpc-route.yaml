@@ -1,0 +1,39 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: GRPCRoute
+metadata:
+  name: {{ .Values.grpcRoute.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gateway.name }}
+      namespace: {{ .Values.gateway.namespace | default .Values.namespace }}
+  hostnames:
+    - "{{ .Values.grpcRoute.host }}"
+  rules:
+    - matches:
+        - method: "Send"
+          headers:
+            - type: Exact
+              name: "content-type"
+              value: "application/grpc"
+      backendRefs:
+        - name: {{ .Values.service.name  }}
+          port: {{ .Values.service.port }}
+    - matches:
+        - method: "SendWithTimeout"
+          headers:
+            - type: Exact
+              name: "content-type"
+              value: "application/grpc"
+      backendRefs:
+        - name: {{ .Values.service.name }}
+          port: {{ .Values.service.port }}
+    - matches:
+        - method: "SendAll"
+          headers:
+            - type: Exact
+              name: "content-type"
+              value: "application/grpc"
+      backendRefs:
+        - name: {{ .Values.service.name }}
+          port: {{ .Values.service.port }}

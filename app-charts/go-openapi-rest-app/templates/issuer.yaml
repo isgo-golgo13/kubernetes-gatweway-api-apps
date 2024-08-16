@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Values.issuer.name }}
+  namespace: {{ .Values.issuer.namespace }}
+spec:
+  vault:
+    auth:
+      clientSecretRef:
+        name: azure-key-vault-secret
+        key: client-secret
+    server: https://{{ .Values.issuer.azureKeyVault.keyVaultName }}.vault.azure.net/
+    path: "pki"
+    caBundle: ""
+    namespace: {{ .Values.issuer.namespace }}

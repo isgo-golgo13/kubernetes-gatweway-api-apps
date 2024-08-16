@@ -1,0 +1,47 @@
+namespace: ""
+
+replicaCount: 3
+
+# Override the chart's default name
+nameOverride: ""
+
+# Override the full name template
+fullnameOverride: ""
+
+# Override the namespace where resources will be deployed
+namespaceOverride: ""
+
+image:
+  repository: nodejs-grpc-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  name: nodejs-grpc-app-service
+  type: ClusterIP
+  port: 50051
+
+gateway:
+  name: nodejs-grpc-gateway
+  namespace: default
+  port: 443
+
+grpcRoute:
+  name: nodejs-grpc-route
+  host: grpc.services.pwc.com
+
+
+issuer:
+  name: azure-key-vault-issuer
+  namespace: default
+  azureKeyVault:
+    tenantId: "<PLUG-tenant-id>"
+    clientId: "<PLUG-client-id>"
+    clientSecret: "<PLUG-client-secret>"
+    keyVaultName: "<PLUG-key-vault-name>"
+
+certificate:
+  name: nodejs-grpc-cert
+  dnsNames:
+    - grpc.services.pwc.com
+  secretName: nodejs-grpc-secret

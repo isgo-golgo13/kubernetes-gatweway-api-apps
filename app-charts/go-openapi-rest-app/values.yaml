@@ -1,0 +1,45 @@
+# Override the chart's default name
+nameOverride: ""
+
+# Override the full name template
+fullnameOverride: ""
+
+# Override the namespace where resources will be deployed
+namespaceOverride: ""
+
+
+replicaCount: 3
+
+image:
+  repository: go-rest-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+gateway:
+  name: go-rest-app-gateway
+  namespace: default
+  port: 443
+
+httpRoute:
+  name: go-rest-app-route
+  host: go-rest-app.services.pwc.com
+  path: /
+
+issuer:
+  name: azure-key-vault-issuer
+  namespace: default
+  azureKeyVault:
+    tenantId: "<PLUG-tenant-id>"
+    clientId: "<PLUG-client-id>"
+    clientSecret: "<PLUG-client-secret>"
+    keyVaultName: "<PLUG-key-vault-name>"
+
+certificate:
+  name: go-rest-app-cert
+  dnsNames:
+    - go-rest-app.services.pwc.com
+  secretName: go-rest-app-secret

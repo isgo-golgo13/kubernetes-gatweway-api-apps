@@ -1,0 +1,47 @@
+namespace: ""
+
+replicaCount: 3
+
+# Override the chart's default name
+nameOverride: ""
+
+# Override the full name template
+fullnameOverride: ""
+
+# Override the namespace where resources will be deployed
+namespaceOverride: ""
+
+image:
+  repository: go-grpc-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  name: go-grpc-app-service
+  type: ClusterIP
+  port: 50051
+
+gateway:
+  name: go-grpc-gateway
+  namespace: default
+  port: 443
+
+grpcRoute:
+  name: go-grpc-route
+  host: grpc.services.pwc.com
+
+
+issuer:
+  name: azure-key-vault-issuer
+  namespace: default
+  azureKeyVault:
+    tenantId: "<PLUG-tenant-id>"
+    clientId: "<PLUG-client-id>"
+    clientSecret: "<PLUG-client-secret>"
+    keyVaultName: "<PLUG-key-vault-name>"
+
+certificate:
+  name: go-grpc-cert
+  dnsNames:
+    - grpc.services.pwc.com
+  secretName: go-grpc-secret

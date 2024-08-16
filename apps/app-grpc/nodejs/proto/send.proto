@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package send;
+
+// The send service definition.
+service SendService {
+  // Sends data with ID and bytes.
+  rpc Send (SendRequest) returns (SendResponse) {}
+
+  // Sends data with ID, bytes and a timeout.
+  rpc SendWithTimeout (SendWithTimeoutRequest) returns (SendResponse) {}
+
+  // Streaming version of Send.
+  rpc SendAll (stream SendRequest) returns (stream SendResponse) {}
+}
+
+// The request message containing the ID and bytes.
+message SendRequest {
+  int32 id = 1;
+  bytes data = 2;
+}
+
+// The request message containing the ID, bytes and timeout.
+message SendWithTimeoutRequest {
+  int32 id = 1;
+  bytes data = 2;
+  int32 timeout = 3;
+}
+
+// The response message containing the number of bytes sent.
+message SendResponse {
+  int32 bytes_sent = 1;
+}
